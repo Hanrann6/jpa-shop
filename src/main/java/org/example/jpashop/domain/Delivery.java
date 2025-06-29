@@ -23,4 +23,20 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status; //ENUM [READY, COMP]
 
+    public Delivery() {
+    }
+
+    public Delivery(Address address) {
+        this.address = address;
+        this.status = DeliveryStatus.READY;
+    }
+
+    @Override
+    public String toString() {
+        return "Delivery{" +
+                "id=" + id +
+                ", address=" + address +
+                ", status=" + status +
+                '}';
+    }
 }

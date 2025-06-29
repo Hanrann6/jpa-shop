@@ -34,6 +34,43 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status; //주문 상태
 
+    //==생성 메소드==//
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        for(OrderItem orderItem : orderItems){
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(new Date());
+        return order;
+    }
+
+    //==비즈니스 로직==//
+    //*주문 취소*//
+    public void cancel(){
+        if(delivery.getStatus() == DeliveryStatus.COMP){
+            throw new RuntimeException("Delivery has already been cancelled");
+        }
+        this.setStatus(OrderStatus.CANCEL);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+
+    //==조회 로직==//
+    //*전체 주문 가격 조회*//
+    public int getTotalPrice(){
+        int totalPrice = 0;
+        for(OrderItem orderItem : orderItems){
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
+
+
+    //==연관관계 메소드==//
     public void setMember(Member member) {
         this.member = member;
         member.getOrders().add(this);
